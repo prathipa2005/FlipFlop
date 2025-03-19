@@ -1,0 +1,51 @@
+module SR_FF(input clk,reset,s,r,output reg q,qbar);
+always @ (posedge clk or posedge reset)
+begin
+if(reset)
+begin
+q<=0;
+qbar<=1;
+end
+else
+begin
+case({s,r})
+2'b00:
+begin
+q<=q;
+qbar<=~q;
+end
+2'b01:
+begin
+q<=1'b0;
+qbar<=1'b1;
+end
+2'b10:
+begin
+q<=1'b1;
+qbar<=1'b0;
+end
+2'b11:
+begin
+q<=1'bz;
+qbar<=1'bz;
+end
+endcase
+end
+end
+endmodule
+
+module SR_FF_tb;
+reg s,r,reset,clk;
+wire q,qbar;
+SR_FF uut (.s(s),.r(r),.reset(reset),.clk(clk),.q(q),.qbar(qbar));
+always #5 clk=~clk;
+initial begin
+clk=1'b1;
+reset=1'b1;s=1'b0;r=1'b1;#10;
+reset=1'b0;s=1'b0;r=1'b0;#10;
+s=1'b0;r=1'b1;#10;
+s=1'b1;r=1'b0;#10;
+s=1'b1;r=1'b1;#10;
+$stop;
+end
+endmodule
