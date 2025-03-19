@@ -1,0 +1,41 @@
+module T_FF(input clk,reset,t,output reg q,qbar);
+always @ (posedge clk or posedge reset)
+begin
+if(reset)
+begin
+q<=1'b0;
+qbar<=1'b1;
+end
+else
+begin
+case(t)
+1'b0:begin
+q<=q;
+qbar<=~q;
+end
+1'b1:begin
+q<=~q;
+qbar<=q;
+end
+endcase
+end
+end
+endmodule
+
+
+module T_FF_tb;
+reg t,reset,clk;
+wire q,qbar;
+T_FF uut (.t(t),.reset(reset),.clk(clk),.q(q),.qbar(qbar));
+always #5 clk=~clk;
+initial begin
+clk=1'b0;
+reset=1'b1;t=1'b0;#10;
+reset=1'b0;
+t=1'b0;#10;
+t=1'b1;#10;
+t=1'b0;#10;
+t=1'b1;#10;
+$stop;
+end
+endmodule
